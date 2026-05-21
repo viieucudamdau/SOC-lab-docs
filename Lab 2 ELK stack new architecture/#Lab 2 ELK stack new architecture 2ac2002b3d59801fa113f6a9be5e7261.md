@@ -2,7 +2,7 @@
 
 # I. Thông tin LAB
 
-**Mục tiêu chính:** Triển khai kiến trúc ****Elastic Stack hiện đại (Elasticsearch-Kibana-Fleet) và sử dụng Elastic Agent để quản lý tập trung, thu thập và trực quan hóa dữ liệu log/metrics từ Endpoint.
+**Mục tiêu chính:** Triển khai kiến trúc Elastic Stack hiện đại (Elasticsearch-Kibana-Fleet) và sử dụng Elastic Agent để quản lý tập trung, thu thập và trực quan hóa dữ liệu log/metrics từ Endpoint.
 
 **Công cụ sử dụng:** Ubuntu server, Ubuntu desktop, Windows, Elasticsearch (9.2.1), Kibana (9.2.1), Fleet Server, Elastic Agent, Oracle VirtualBox, PuTTY.
 
