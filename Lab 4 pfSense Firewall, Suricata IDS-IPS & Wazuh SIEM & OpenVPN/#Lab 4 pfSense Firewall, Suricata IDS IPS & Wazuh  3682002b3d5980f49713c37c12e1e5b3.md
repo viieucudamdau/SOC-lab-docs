@@ -1,4 +1,4 @@
-# #Lab 4: pfSense Firewall, Suricata IDS/IPS & Wazuh SIEM
+# #Lab 4: pfSense Firewall, Suricata IDS/IPS & Wazuh SIEM & OpenVPN
 
 # I. Thông tin LAB
 
