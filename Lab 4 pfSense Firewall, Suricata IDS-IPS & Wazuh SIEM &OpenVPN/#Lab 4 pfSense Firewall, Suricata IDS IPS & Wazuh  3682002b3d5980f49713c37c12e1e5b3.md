@@ -8,6 +8,8 @@
 
 **Thực hiện bởi:** Nguyễn Tiến Thanh Hải, Hồ Tuấn Phát
 
+**Lưu ý:** Vì lab được thực hiện trong 1 thời gian dài nên 1 số Host có IP khác với IP đã được hoạch định trên Topology vì các lý do như DHCP cấp lại, sập server, dựng lại server, etc... Nhưng nhìn chung các IP vẫn nằm trong dải IP đã được hoạch định từ trước.
+
 # II. Sơ đồ tổng quát
 
 ### 1. Network topology
@@ -492,6 +494,8 @@ Sử dụng lệnh `nano /var/ossec/etc/ossec.conf` để mở tệp cấu hình
 
 `<location>`: Đường dẫn trỏ đến tệp tin log đã xác định ở bước trước.
 
+![image.png](image%2042.png)
+
 Khởi động lại dịch vụ:
 
 ```jsx
@@ -502,23 +506,23 @@ Kết quả thực hiện
 
 Thông báo `success` xác nhận Agent đã nạp cấu hình mới thành công
 
-![image.png](image%2042.png)
+![image.png](image%2043.png)
 
 ### 4. Cài đặt Wazuh Agent trên Web Server (Vùng DMZ)
 
 - **Bước 1:** Truy cập giao diện Wazuh, vào mục **Agents Management**
 
-![image.png](image%2043.png)
+![image.png](image%2044.png)
 
 Chọn vào Deploy new agent
 
-![image.png](image%2044.png)
+![image.png](image%2045.png)
 
 Cấu hình thông tin cơ bản
 
-![image.png](image%2045.png)
-
 ![image.png](image%2046.png)
+
+![image.png](image%2047.png)
 
 - **Bước 2:** Sử dụng script được Wazuh cấp sẵn để tải gói `.deb` và thực hiện cài đặt tự động trên Web Server
 
@@ -526,7 +530,7 @@ Cấu hình thông tin cơ bản
 sudo wget https://packages.wazuh.com/4.x/apt/pool/main/w/wazuh-agent/wazuh-agent_4.14.4-1_amd64.deb && sudo WAZUH_MANAGER='192.168.1.55' WAZUH_AGENT_NAME='WebServerAgentDMZ' dpkg -i ./wazuh-agent_4.14.4-1_amd64.deb
 ```
 
-![image.png](image%2047.png)
+![image.png](image%2048.png)
 
 Chạy các lệnh sau để kích hoạt dịch vụ và thiết lập tự động khởi động cùng hệ thống:
 
@@ -536,7 +540,7 @@ sudo systemctl enable wazuh-agent
 sudo systemctl start wazuh-agent
 ```
 
-![image.png](image%2048.png)
+![image.png](image%2049.png)
 
 **Lưu ý:** Khi thực hiện cài đặt Wazuh Agent trên Web Server DMZ mình đã thực hiện mở rule cho phép SSH từ LAN vào DMZ  để thực hiện cài đặt cho tiện (copy scripts cho nhanh xDD) sau khi cài xong mình đã disable rule SSH.
 
@@ -544,7 +548,7 @@ sudo systemctl start wazuh-agent
 
 Sau khi cài đặt xong, quay lại trang Wazuh để xác nhận các thiết bị đã kết nối thành công hay chưa
 
-![image.png](image%2049.png)
+![image.png](image%2050.png)
 
 → Agent trên Web Server DMZ vẫn đăng kí và hoạt động bình thường (Firewall Rule 1)
 
@@ -552,49 +556,49 @@ Sau khi cài đặt xong, quay lại trang Wazuh để xác nhận các thiết 
 
 - **Bước 1:** Cài đặt Suricata vào pfSense
 
-![image.png](image%2050.png)
+![image.png](image%2051.png)
 
 Truy cập System → Package Manager
 
-![image.png](image%2051.png)
+![image.png](image%2052.png)
 
 Ấn Install để cài đặt gói Suricata
 
-![image.png](image%2052.png)
+![image.png](image%2053.png)
 
 → Cài đặt thành công
 
 - **Bước 2:** Thực hiện cấu hình cho Suricata tiến hành giám sát trên WAN Interface
 
-![image.png](image%2053.png)
+![image.png](image%2054.png)
 
 Tại **Services > Suricata > Interfaces**, nhấn **Add** để chọn cổng cần giám sát 
 
-![image.png](image%2054.png)
+![image.png](image%2055.png)
 
 Bắt đầu cấu hình Suricata
 
-![image.png](image%2055.png)
+![image.png](image%2056.png)
 
 Cấu hình Suricata để xuất Alert ra 1 file eve.json sau đó ấn Save
 
-![image.png](image%2056.png)
+![image.png](image%2057.png)
 
 Vào tab Global Settings để tải các bộ Rule về
 
-![image.png](image%2057.png)
+![image.png](image%2058.png)
 
 Vào tab Updates để cập nhật các bộ rule mới
 
-![image.png](image%2058.png)
+![image.png](image%2059.png)
 
 Trở lại tab Interfaces và chọn vào biểu tượng chỉnh sửa tương ứng với cổng WAN (em0) đã được thêm trước đó
 
-![image.png](image%2059.png)
+![image.png](image%2060.png)
 
 Chọn **Select All**  để kích hoạt tối đa khả năng phát hiện xâm nhập cho mục đích thực nghiệm
 
-![image.png](image%2060.png)
+![image.png](image%2061.png)
 
 - **Bước 3:** Kiểm thử cơ bản Suricata
 
@@ -604,15 +608,15 @@ Sử dụng máy Kali ping vào Interface WAN của pfSense
 
 Kết quả cảnh báo của Suricata khi ping vào WAN Interfaces
 
-![image.png](image%2061.png)
+![image.png](image%2062.png)
 
 Sử dụng máy Kali thử tấn công BruteForce SSH vào WAN Interface của pfSense
 
-![image.png](image%2062.png)
+![image.png](image%2063.png)
 
 Kết quả cảnh báo của Suricata khi tấn công BruteForce SSH
 
-![image.png](image%2063.png)
+![image.png](image%2064.png)
 
 **Lưu ý:** Hiện tại chỉ đang kiểm thử chức năng IDS của Suricata chức năng IPS sẽ được thực hiện kiểm thử ở phần sau.
 
@@ -622,25 +626,25 @@ Kết quả cảnh báo của Suricata khi tấn công BruteForce SSH
 
 - **Bước 1:** Vào Firewall → NAT
 
-![image.png](image%2064.png)
+![image.png](image%2065.png)
 
 Ấn Add để thêm NAT rule mới
 
-![image.png](image%2065.png)
+![image.png](image%2066.png)
 
 - **Bước 2:** Cấu hình NAT rule
 
-![image.png](image%2066.png)
+![image.png](image%2067.png)
 
 Chỉnh redirect port về SSH sau đó Save
 
-![image.png](image%2067.png)
+![image.png](image%2068.png)
 
 - **Bước 3:** Kiểm tra kết nối
 
 Sử dụng máy Kali ngoài WAN SSH vào máy Ubuntu ở trong LAN
 
-![image.png](image%2068.png)
+![image.png](image%2069.png)
 
 → Thành công đăng nhập SSH vào LAN
 
@@ -648,25 +652,25 @@ Sử dụng máy Kali ngoài WAN SSH vào máy Ubuntu ở trong LAN
 
 - **Bước 1:** Vào Firewall → NAT
 
-![image.png](image%2069.png)
+![image.png](image%2070.png)
 
 Ấn Add để thêm NAT rule mới
 
-![image.png](image%2070.png)
+![image.png](image%2071.png)
 
 **Bước 2:** Cấu hình NAT rule
 
-![image.png](image%2071.png)
+![image.png](image%2072.png)
 
 Chỉnh trỏ IP về IP của máy Web Server trong DMZ và chỉnh về port về dịch vụ HTTP sau đó Save
 
-![image.png](image%2072.png)
+![image.png](image%2073.png)
 
 - **Bước 3:** Kiểm tra kết nối
 
 Sử dụng máy Kali ngoài WAN truy cập vào DVWA web được đặt ở DMZ
 
-![image.png](image%2073.png)
+![image.png](image%2074.png)
 
 → Thành công truy cập vào website
 
@@ -686,7 +690,7 @@ sudo hping3 -S --flood -p 8080 192.168.10.11
 
 Sử dụng 2 máy Kali để thực hiện tấn công
 
-![image.png](image%2074.png)
+![image.png](image%2075.png)
 
 - **Bước 2:** Bắt đầu cuộc tấn công
 
@@ -716,25 +720,25 @@ Quan sát log mà Suricata gửi về Wazuh Server
 
 Services → Suricata
 
-![image.png](image%2053.png)
+![image.png](image%2054.png)
 
 Edit 
 
-![image.png](image%2075.png)
+![image.png](image%2076.png)
 
 Tích vào ô mở chức năng Block Offenders và Save
 
-![image.png](image%2076.png)
+![image.png](image%2077.png)
 
 Blocking Mode: LEGACY MODE là thành công
 
-![image.png](image%2077.png)
+![image.png](image%2078.png)
 
 - **Bước 2:** Thử nghiệm tấn công DDoS khi có IPS
 
 Thực hiện tấn công
 
-![image.png](image%2078.png)
+![image.png](image%2079.png)
 
 Video khi reload lại website user hợp lệ vẫn vào bình thường
 
@@ -742,11 +746,11 @@ Video khi reload lại website user hợp lệ vẫn vào bình thường
 
 Block list của Suricata
 
-![image.png](image%2079.png)
+![image.png](image%2080.png)
 
 Chứa 2 IP của 2 máy tấn công và sau khi bị block 2 máy này sẽ không còn có thể truy cập bất cứ tài nguyên nào được nữa.
 
-![image.png](image%2080.png)
+![image.png](image%2081.png)
 
 ### 2. Tấn công BruteForce SSH
 
@@ -762,15 +766,15 @@ hydra -l "username" -P /usr/share/wordlists/rockyou.txt "your IP address" ssh -V
 
 Khi không có IPS BruteForce SSH đã dò được mật khẩu của user
 
-![image.png](image%2081.png)
+![image.png](image%2082.png)
 
 Wazuh log thông báo rằng có 1 lần thử thành công trong chuỗi tấn công BruteForce
 
-![image.png](image%2082.png)
+![image.png](image%2083.png)
 
 Suricata Alert
 
-![image.png](image%2083.png)
+![image.png](image%2084.png)
 
 → Khi không có IPS tất cả chỉ dừng lại ở mức cảnh báo vì thế hacker vẫn có thể đánh cắp và xâm nhập vào tài khoản của user
 
@@ -780,37 +784,37 @@ Suricata Alert
 
 Services → Suricata
 
-![image.png](image%2053.png)
+![image.png](image%2054.png)
 
 Edit 
 
-![image.png](image%2075.png)
+![image.png](image%2076.png)
 
 Tích vào ô mở chức năng Block Offenders và Save
 
-![image.png](image%2076.png)
+![image.png](image%2077.png)
 
 Blocking Mode: LEGACY MODE là thành công
 
-![image.png](image%2077.png)
+![image.png](image%2078.png)
 
 - **Bước 2:** Thử nghiệm tấn công BruteForce SSH khi có IPS
 
-![image.png](image%2084.png)
+![image.png](image%2085.png)
 
 Kết quả cuộc tấn công bị dừng giữa chừng và không thể tiếp tục dò mật khẩu
 
-![image.png](image%2085.png)
+![image.png](image%2086.png)
 
 → Đúng mật khẩu nhưng hydra không thể báo thành công do không có response từ target do đã bị IPS ch 
 
 Suricata alert
 
-![image.png](image%2086.png)
+![image.png](image%2087.png)
 
 Suricata block list
 
-![image.png](image%2087.png)
+![image.png](image%2088.png)
 
 → Ngăn chặn được việc user bị dò ra mật khẩu và đảm bảo sự an toàn cho hệ thống
 
@@ -832,15 +836,15 @@ Nhập Script:
 
 Kết quả sau khi tiêm scripts SQLi vào ô User ID
 
-![image.png](image%2088.png)
+![image.png](image%2089.png)
 
 Suricata Alert
 
-![image.png](image%2089.png)
+![image.png](image%2090.png)
 
 Wazuh log
 
-![image.png](image%2090.png)
+![image.png](image%2091.png)
 
 #### 3.2 Tấn công SQL Injection khi có IPS
 
@@ -848,19 +852,19 @@ Wazuh log
 
 Services → Suricata
 
-![image.png](image%2053.png)
+![image.png](image%2054.png)
 
 Edit 
 
-![image.png](image%2075.png)
+![image.png](image%2076.png)
 
 Tích vào ô mở chức năng Block Offenders và Save
 
-![image.png](image%2076.png)
+![image.png](image%2077.png)
 
 Blocking Mode: LEGACY MODE là thành công
 
-![image.png](image%2077.png)
+![image.png](image%2078.png)
 
 - **Bước 2:** Thử nghiệm tấn công SQLi khi có IPS
 
@@ -876,13 +880,286 @@ Video khi tiêm scripts vào web server
 
 Suricata Alert
 
-![image.png](image%2091.png)
+![image.png](image%2092.png)
 
 Suricata Block list
 
-![image.png](image%2092.png)
+![image.png](image%2093.png)
 
-# X. Kết thúc lab
+# X. Thiết lập dịch vụ OpenVPN trên pfSense cho kết nối Client-to-Site thông qua WAN Interface
+
+### 1. Cấu hình một số Certificates trên pfSense
+
+- **Bước 1:** Tạo CA (Certificate Authority)
+
+![image.png](image%2094.png)
+
+Truy cập System → Certificates → Authority → Add để thêm 1 CA mới
+
+![image.png](image%2095.png)
+
+Cấu hình như trên và Save
+
+![image.png](image%2096.png)
+
+- **Bước 2:** Tạo Certificates cho OpenVPN
+
+![image.png](image%2097.png)
+
+Truy cập System → Certificates → Certificates → Add/Sign để thêm một Cert mới
+
+![image.png](image%2098.png)
+
+![image.png](image%2099.png)
+
+Cấu hình như trên và Save
+
+![image.png](image%20100.png)
+
+### 2. Cấu hình OpenVPN trên pfSense
+
+- **Bước 1:**  Cấu hình OpenVPN Server
+
+![image.png](image%20101.png)
+
+Truy cập VPN → OpenVPN → Wizards và cấu hình như ảnh dưới
+
+![image.png](image%20102.png)
+
+Next
+
+![image.png](image%20103.png)
+
+Chọn root CA và Next
+
+![image.png](image%20104.png)
+
+Chọn VPN_Ser_Cert và Next
+
+![image.png](image%20105.png)
+
+![image.png](image%20106.png)
+
+Cấu hình như trên và Next
+
+![image.png](image%20107.png)
+
+Tích vào 2 ô như hình và Next
+
+![image.png](image%20108.png)
+
+Finish
+
+![image.png](image%20109.png)
+
+- **Bước 2:** Thêm User trong User Manager
+
+![image.png](image%20110.png)
+
+Truy cập System → User Manager → Add
+
+![image.png](image%20111.png)
+
+Tạo tài khoản và mật khẩu cho user
+
+![image.png](image%20112.png)
+
+Tạo Cert cho User Linux và Save
+
+![image.png](image%20113.png)
+
+Tương tự tạo thêm 1 User cho Windows
+
+### 3. Cài OpenVPN Export lên pfSense
+
+- **Bước 1:** Cài OpenVPN Export
+
+![image.png](image%20114.png)
+
+Truy cập System → Package Manager → Available Package
+
+![image.png](image%20115.png)
+
+Search openvpn và Install OpenVPN Export 
+
+![image.png](image%20116.png)
+
+- **Bước 2:** Truy cập OpenVPN Export để xuất Cert cho từng User
+
+![image.png](image%20117.png)
+
+Truy cập VPN → OpenVPN → Client Export
+
+![image.png](image%20118.png)
+
+Chọn phiên bản mong muốn, khuyến khích tải Open VPN từ trang chính thống sau đó Import Cert lấy từ Most Client để thực hiện kết nối VPN.
+
+### 4. Cấu hình gửi log OpenVPN đến Wazuh Server thông qua Wazuh Agent cài trên pfSense
+
+![image.png](image%20119.png)
+
+Sử dụng Nano truy cập path:
+
+```jsx
+nano /var/ossec/etc/ossec.conf
+```
+
+Thêm đoạn cấu hình như sau:
+
+```jsx
+<localfile>
+	<log_format>syslog</log_format>
+	<location>/var/log/openvpn.log</location>
+</localfile>
+```
+
+![image.png](image%20120.png)
+
+Cuối cùng restart agent
+
+```jsx
+service wazuh-agent restart
+```
+
+### 5. Mở kết nối VPN đến Server trên Linux
+
+- **Bước 1:** Kiểm tra kết nối trước khi mở kết nối VPN
+
+![image.png](image%20121.png)
+
+IP WAN và không thể thấy được máy LAN
+
+- **Bước 2:** Tải về file .opvn vừa Export từ Server về máy
+
+![image.png](image%20122.png)
+
+![image.png](image%20123.png)
+
+- **Bước 3:** Cài đặt OpenVPN
+
+Sử dụng Command (Tùy vào từng Distro):
+
+```jsx
+sudo apt install openvpn
+```
+
+![image.png](image%20124.png)
+
+- **Bước 4:** Mở kết nối đến VPN Server
+
+![image.png](image%20125.png)
+
+Mở 1 Terminal ở nơi vừa tải Cert về
+
+![image.png](image%20126.png)
+
+```jsx
+sudo openvpn --config pfSense-UDP4-1194-linux_vpn_user-config.ovpn 
+```
+
+Nhập tài khoản và mật khẩu 
+
+![image.png](image%20127.png)
+
+Kết nối thành công
+
+![image.png](image%20128.png)
+
+Ping thử vào 1 máy trong LAN
+
+![image.png](image%20129.png)
+
+SSH đến UbuntuAgent trong LAN
+
+![image.png](image%20130.png)
+
+Log hiển thị trong pfSense
+
+![image.png](image%20131.png)
+
+Log hiển thị trong Wazuh Server
+
+![image.png](image%20132.png)
+
+Detail log
+
+![image.png](image%20133.png)
+
+![image.png](image%20134.png)
+
+### 6. Mở kết nối đến VPN Server trên Windows
+
+- **Bước 1:** Kiểm tra kết nối trước khi mở kết nối VPN
+
+![image.png](image%20135.png)
+
+IP WAN và không thể thấy được máy LAN
+
+- **Bước 2:** Tải Cert vừa Export từ Server về máy Windows
+
+![image.png](image%20136.png)
+
+- **Bước 3:** Tải và cài đặt OpenVPN
+
+Cài đặt file Setup của OpenVPN từ trang chính thống
+
+![image.png](image%20137.png)
+
+Tiến hành cài đặt OpenVPN
+
+![image.png](image%20138.png)
+
+Install Now
+
+![image.png](image%20139.png)
+
+Giao diện chính
+
+![image.png](image%20140.png)
+
+- **Bước 4:** Add Cert vừa tải về và tiến hành kết nối
+
+Truy cập
+
+```jsx
+C:\Program File\OpenVPN\config
+```
+
+Paste File Cert vừa tải vào thư mục config này
+
+![image.png](image%20141.png)
+
+Tiến hành kết nối
+
+![image.png](image%20142.png)
+
+Thông báo kết nối thành công
+
+![image.png](image%20143.png)
+
+IP VPN được cấp
+
+![image.png](image%20144.png)
+
+Kiểm tra kết nối đến máy LAN
+
+![image.png](image%20145.png)
+
+Kiểm tra log trong pfSense
+
+![image.png](image%20146.png)
+
+Kiểm tra log trong Wazuh Server
+
+![image.png](image%20147.png)
+
+Detail log
+
+![image.png](image%20148.png)
+
+![image.png](image%20149.png)
+
+# XI. Kết thúc lab
 
 ### **1. Kết luận bài Lab**
 
